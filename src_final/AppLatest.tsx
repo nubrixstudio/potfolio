@@ -697,12 +697,14 @@ export default function App() {
                                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                                 referrerPolicy="no-referrer"
                                             />
-                                            {/* Full Overlay with Dimm Effect - Constant visibility */}
-                                            <div className="absolute inset-0 bg-black/60 transition-all duration-500 flex flex-col justify-end p-4 md:p-8 text-white group-hover:bg-black/60">
+                                            {/* Full Overlay with Glass Effect */}
+                                            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm group-hover:backdrop-blur-md group-hover:bg-black/75 transition-all duration-500 flex flex-col justify-end p-4 md:p-8 text-white border border-white/10 rounded-2xl md:rounded-3xl">
+                                                {/* Glass highlight - top edge reflection */}
+                                                <div className="absolute top-0 left-0 right-0 h-px bg-white/15" />
                                                 <div className="transform transition-all duration-500">
-                                                    <h3 className="text-lg md:text-2xl font-bold mb-1 md:mb-3">{project.title}</h3>
-                                                    <p className="text-white/90 text-xs md:text-sm leading-relaxed line-clamp-2 mb-3 md:mb-6">{project.description}</p>
-                                                    <div className="inline-flex items-center gap-2 bg-[#F47C27] text-white px-4 md:px-5 py-1.5 md:py-2 rounded-xl text-xs md:text-sm font-bold hover:bg-white hover:text-[#F47C27] transition-all">
+                                                    <h3 className="text-lg md:text-2xl font-bold mb-1 md:mb-3 drop-shadow-lg">{project.title}</h3>
+                                                    <p className="text-white/90 text-xs md:text-sm leading-relaxed line-clamp-2 mb-3 md:mb-6 drop-shadow-md">{project.description}</p>
+                                                    <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md text-white px-4 md:px-5 py-1.5 md:py-2 rounded-xl text-xs md:text-sm font-bold border border-white/20 hover:bg-[#F47C27] hover:border-[#F47C27] transition-all shadow-lg">
                                                         View Details <ChevronRight className="w-3 h-3 md:w-4 md:h-4" />
                                                     </div>
                                                 </div>
