@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     ExternalLink,
@@ -12,6 +12,7 @@ import {
     Smartphone,
     Mail,
     ChevronRight,
+    Menu,
     X,
     Award,
     Database,
@@ -198,31 +199,76 @@ function FadeUp({ children, delay = 0, className = '' }: { children: ReactNode; 
 export default function App() {
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [activeTab, setActiveTab] = useState('All');
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const categories = ['All', 'App Design', 'Web Design', 'System Design'];
     const filteredProjects = activeTab === 'All'
         ? PROJECTS
         : PROJECTS.filter(p => p.category === activeTab);
 
+    // 모바일 메뉴 열릴 때 body 스크롤 방지
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+    }, [mobileMenuOpen]);
+
     return (
         <div className="min-h-screen bg-[#EEEEEE] text-[#333333] font-sans selection:bg-[#F47C27] selection:text-white">
             {/* Navigation */}
             <nav className="fixed top-0 w-full z-50 bg-[#EEEEEE]/80 backdrop-blur-md border-b border-black/5">
-                <div className="max-w-[1200px] mx-auto px-6 h-20 flex items-center justify-between">
-                    <div className="text-2xl font-bold tracking-tighter">
+                <div className="max-w-[1200px] mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
+                    <div className="text-xl md:text-2xl font-bold tracking-tighter">
                         <span>PORTFOLIO</span>
                     </div>
+                    {/* Desktop Menu */}
                     <div className="hidden md:flex items-center gap-8 text-sm font-medium text-[#666666]">
                         <a href="#work" className="hover:text-[#F47C27] transition-colors">WORK</a>
                         <a href="#about" className="hover:text-[#F47C27] transition-colors">ABOUT</a>
                         <a href="#contact" className="hover:text-[#F47C27] transition-colors">CONTACT</a>
                     </div>
+                    {/* Mobile Hamburger Button */}
+                    <button
+                        className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl hover:bg-black/5 transition-colors"
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        aria-label="메뉴 열기"
+                    >
+                        {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                    </button>
                 </div>
             </nav>
 
-            <main className="pt-12">
+            {/* Mobile Menu Overlay */}
+            <AnimatePresence>
+                {mobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[60] bg-[#EEEEEE]/95 backdrop-blur-lg flex flex-col items-center justify-center gap-8 md:hidden"
+                    >
+                        {/* 닫기 버튼 */}
+                        <button
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="absolute top-5 right-4 w-10 h-10 flex items-center justify-center rounded-xl hover:bg-black/5 transition-colors"
+                            aria-label="메뉴 닫기"
+                        >
+                            <X className="w-6 h-6 text-[#333333]" />
+                        </button>
+
+                        <a href="#work" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-bold text-[#333333] hover:text-[#F47C27] transition-colors">WORK</a>
+                        <a href="#about" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-bold text-[#333333] hover:text-[#F47C27] transition-colors">ABOUT</a>
+                        <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-bold text-[#333333] hover:text-[#F47C27] transition-colors">CONTACT</a>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <main className="pt-16 md:pt-20">
                 {/* Hero Section */}
-                <section className="relative px-6 py-16 md:py-28 max-w-[1200px] mx-auto overflow-hidden">
+                <section className="relative px-4 md:px-6 py-12 md:py-28 max-w-[1200px] mx-auto overflow-hidden">
                     {/* Interactive Background Elements */}
                     <div className="absolute inset-0 -z-10 overflow-hidden">
                         <motion.div
@@ -233,7 +279,7 @@ export default function App() {
                                 y: [0, -30, 0]
                             }}
                             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                            className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#F47C27]/10 rounded-full blur-[120px]"
+                            className="absolute top-[-10%] right-[-10%] w-[250px] h-[250px] md:w-[500px] md:h-[500px] bg-[#F47C27]/10 rounded-full blur-[120px]"
                         />
                         <motion.div
                             animate={{
@@ -242,21 +288,21 @@ export default function App() {
                                 y: [0, 60, 0]
                             }}
                             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                            className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-[#333333]/5 rounded-full blur-[100px]"
+                            className="absolute bottom-[-10%] left-[-10%] w-[200px] h-[200px] md:w-[400px] md:h-[400px] bg-[#333333]/5 rounded-full blur-[100px]"
                         />
                         {/* Neon Lines */}
-                        <div className="absolute top-1/4 right-1/4 w-px h-64 bg-gradient-to-b from-transparent via-[#F47C27]/40 to-transparent rotate-45 blur-[1px]" />
-                        <div className="absolute bottom-1/4 left-1/3 w-px h-48 bg-gradient-to-b from-transparent via-[#F47C27]/20 to-transparent -rotate-12 blur-[1px]" />
+                        <div className="absolute top-1/4 right-1/4 w-px h-32 md:h-64 bg-gradient-to-b from-transparent via-[#F47C27]/40 to-transparent rotate-45 blur-[1px]" />
+                        <div className="absolute bottom-1/4 left-1/3 w-px h-24 md:h-48 bg-gradient-to-b from-transparent via-[#F47C27]/20 to-transparent -rotate-12 blur-[1px]" />
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center relative z-10">
                         <motion.div
                             initial={{ opacity: 0, x: -30 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
                         >
-                            <h2 className="text-[#F47C27] font-mono text-sm tracking-widest uppercase mb-4">Web & UI/UX Designer</h2>
-                            <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-[1.4] mb-8">
+                            <h2 className="text-[#F47C27] font-mono text-xs md:text-sm tracking-widest uppercase mb-3 md:mb-4">Web & UI/UX Designer</h2>
+                            <h1 className="text-2xl md:text-5xl font-extrabold tracking-tight leading-[1.4] mb-5 md:mb-8">
                                 디자인을 통해 <br />
                                 <span className="relative inline-block">
                                     디지털 가치
@@ -269,15 +315,77 @@ export default function App() {
                                 </span>
                                 를 실현합니다.
                             </h1>
-                            <p className="text-xl text-[#666666] leading-[1.4] mb-10 max-w-xl">
+                            <p className="text-base md:text-xl text-[#666666] leading-[1.6] mb-12 md:mb-10 max-w-xl">
                                 금융, 커머스, 대기업 운영 프로젝트 등 다양한 도메인에서의 경험을 바탕으로
                                 비즈니스 목표와 사용자 니즈를 잇는 최적의 솔루션을 제안합니다.
                             </p>
 
-                            <div className="flex flex-wrap gap-4">
+                            {/* Mobile Mockup - 텍스트와 버튼 사이 (모바일에서만 표시) */}
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{
+                                    opacity: 1,
+                                    scale: 1,
+                                    y: [0, -12, 0]
+                                }}
+                                transition={{
+                                    duration: 0.8,
+                                    ease: "easeOut",
+                                    y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+                                }}
+                                className="lg:hidden flex justify-center mt-6 mb-12 max-h-[300px]"
+                            >
+                                <div className="relative perspective-1000">
+                                    {/* Neon Glow */}
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120px] h-[200px] bg-[#F47C27]/25 rounded-[30px] blur-[50px] -z-10" />
+
+                                    {/* Phone Frame */}
+                                    <div className="relative w-[140px] h-[260px] mx-auto bg-[#1a1a1a] rounded-[28px] p-2 shadow-2xl border-[4px] border-[#333333]">
+                                        {/* Screen Content */}
+                                        <div className="w-full h-full bg-white rounded-[22px] overflow-hidden relative">
+                                            <div className="p-3 pt-6">
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <div className="w-6 h-6 bg-[#F47C27] rounded-md" />
+                                                    <div className="flex gap-1">
+                                                        <div className="w-1 h-1 rounded-full bg-[#ddd]" />
+                                                        <div className="w-1 h-1 rounded-full bg-[#ddd]" />
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <div className="h-4 bg-[#EEEEEE] rounded-md w-3/4" />
+                                                    <div className="h-2 bg-[#EEEEEE] rounded-md w-full" />
+                                                    <div className="h-2 bg-[#EEEEEE] rounded-md w-5/6" />
+                                                    <div className="grid grid-cols-2 gap-2 mt-4">
+                                                        <motion.div
+                                                            animate={{ y: [0, -8, 0] }}
+                                                            transition={{ duration: 3, repeat: Infinity }}
+                                                            className="aspect-square bg-[#F47C27]/5 rounded-xl border border-[#F47C27]/10 flex items-center justify-center"
+                                                        >
+                                                            <Layout className="w-5 h-5 text-[#F47C27]" />
+                                                        </motion.div>
+                                                        <motion.div
+                                                            animate={{ y: [0, 8, 0] }}
+                                                            transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+                                                            className="aspect-square bg-[#333333]/5 rounded-xl border border-black/5 flex items-center justify-center"
+                                                        >
+                                                            <Smartphone className="w-5 h-5 text-[#333333]" />
+                                                        </motion.div>
+                                                    </div>
+                                                    <div className="h-14 bg-[#EEEEEE] rounded-lg w-full mt-2" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Notch */}
+                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-4 bg-[#1a1a1a] rounded-b-lg" />
+                                    </div>
+                                </div>
+                            </motion.div>
+
+                            <div className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4">
                                 <a
                                     href="#contact"
-                                    className="bg-[#333333] text-white px-8 py-4 rounded-2xl font-bold hover:bg-[#F47C27] hover:shadow-[0_0_20px_rgba(244,124,39,0.4)] transition-all flex items-center gap-2 group relative overflow-hidden"
+                                    className="bg-[#333333] text-white px-6 md:px-8 py-3 md:py-4 rounded-2xl font-bold text-sm md:text-base hover:bg-[#F47C27] hover:shadow-[0_0_20px_rgba(244,124,39,0.4)] transition-all flex items-center justify-center gap-2 group relative overflow-hidden"
                                 >
                                     <span className="relative z-10">함께 일하기</span>
                                     <Mail className="w-5 h-5 group-hover:scale-110 transition-transform relative z-10" />
@@ -289,7 +397,7 @@ export default function App() {
                                 <a
                                     href={`${import.meta.env.BASE_URL}resume.pdf`}
                                     download="김아현_이력서.pdf"
-                                    className="bg-white text-[#333333] border border-black/10 px-8 py-4 rounded-2xl font-bold hover:bg-[#F47C27] hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(244,124,39,0.4)] transition-all flex items-center gap-2 group"
+                                    className="bg-white text-[#333333] border border-black/10 px-6 md:px-8 py-3 md:py-4 rounded-2xl font-bold text-sm md:text-base hover:bg-[#F47C27] hover:text-white hover:border-transparent hover:shadow-[0_0_20px_rgba(244,124,39,0.4)] transition-all flex items-center justify-center gap-2 group"
                                 >
                                     이력서 다운로드
                                     <Award className="w-5 h-5 text-[#F47C27] group-hover:text-white transition-colors" />
@@ -360,12 +468,12 @@ export default function App() {
                         </motion.div>
                     </div>
 
-                    {/* Scroll Indicator */}
+                    {/* Scroll Indicator - 모바일에서 숨김 */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 1.5 }}
-                        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+                        className="absolute bottom-4 md:bottom-10 left-1/2 -translate-x-1/2 flex-col items-center gap-2 hidden md:flex"
                     >
                         <span className="text-[10px] font-bold uppercase tracking-widest text-[#666666]">Scroll down</span>
                         <motion.div
@@ -377,23 +485,24 @@ export default function App() {
                 </section>
 
                 {/* Infographic Section */}
-                <section className="px-6 py-20 bg-[#F47C27]/5 border-y border-[#F47C27]/10 overflow-hidden">
+                <section className="px-4 md:px-6 py-12 md:py-20 bg-[#F47C27]/5 border-y border-[#F47C27]/10 overflow-hidden">
                     <div className="max-w-[1200px] mx-auto">
-                        <FadeUp className="text-center mb-8">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F47C27]/10 text-[#F47C27] text-[10px] font-bold uppercase tracking-widest mb-6">
+                        <FadeUp className="text-center mb-6 md:mb-8">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F47C27]/10 text-[#F47C27] text-[10px] font-bold uppercase tracking-widest mb-4 md:mb-6">
                                 Industry Awareness
                             </div>
-                            <h2 className="text-3xl md:text-5xl font-bold mb-6">시장을 읽는 디자이너</h2>
-                            <p className="text-[#666666] leading-relaxed max-w-2xl mx-auto">
+                            <h2 className="text-2xl md:text-5xl font-bold mb-4 md:mb-6">시장을 읽는 디자이너</h2>
+                            <p className="text-sm md:text-base text-[#666666] leading-relaxed max-w-2xl mx-auto">
                                 단순히 시각적인 아름다움을 넘어, 비즈니스 가치를 창출하고
                                 사용자와 기업 모두를 만족시키는 디자인 전략을 제안합니다.
                             </p>
                         </FadeUp>
 
-                        <div className="relative h-[500px] md:h-[600px] flex items-center justify-center">
+                        {/* Desktop: 기존 원형 다이어그램 */}
+                        <div className="relative h-[600px] hidden md:flex items-center justify-center">
                             {/* Central Hub in Background */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div className="relative w-72 h-72 md:w-96 md:h-96 flex items-center justify-center">
+                                <div className="relative w-96 h-96 flex items-center justify-center">
                                     <motion.div
                                         animate={{ rotate: 360 }}
                                         transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
@@ -406,10 +515,10 @@ export default function App() {
                             {/* Core Value Center */}
                             <motion.div
                                 whileHover={{ scale: 1.05 }}
-                                className="relative z-10 w-48 h-48 md:w-64 md:h-64 rounded-full bg-[#F47C27]/20 flex flex-col items-center justify-center text-center p-8 border border-[#F47C27]/10"
+                                className="relative z-10 w-64 h-64 rounded-full bg-[#F47C27]/20 flex flex-col items-center justify-center text-center p-8 border border-[#F47C27]/10"
                             >
                                 <p className="text-xs font-bold uppercase tracking-[0.5em] text-[#F47C27] mb-2">Core Value</p>
-                                <h3 className="text-xl md:text-2xl font-black leading-tight">Business <br />Driven Design</h3>
+                                <h3 className="text-2xl font-black leading-tight">Business <br />Driven Design</h3>
                             </motion.div>
 
                             {/* Satellites */}
@@ -418,9 +527,9 @@ export default function App() {
                                 <motion.div
                                     initial={{ x: -100, y: -100, opacity: 0 }}
                                     whileInView={{ x: 0, y: 0, opacity: 1 }}
-                                    className="absolute top-[15%] left-[10%] md:left-[20%]"
+                                    className="absolute top-[15%] left-[20%]"
                                 >
-                                    <div className="w-36 h-36 md:w-44 md:h-44 rounded-full bg-[#F47C27]/5 border border-[#F47C27] flex flex-col items-center justify-center text-center p-4 scale-110 shadow-[0_0_20px_rgba(244,124,39,0.1)]">
+                                    <div className="w-44 h-44 rounded-full bg-[#F47C27]/5 border border-[#F47C27] flex flex-col items-center justify-center text-center p-4 scale-110 shadow-[0_0_20px_rgba(244,124,39,0.1)]">
                                         <Database className="w-5 h-5 text-[#F47C27] mb-2" />
                                         <h4 className="font-bold text-sm mb-1">Data Analysis</h4>
                                         <p className="text-[10px] text-[#666666]">사용자 지표 기반의 <br />객관적 디자인 의사결정</p>
@@ -431,9 +540,9 @@ export default function App() {
                                 <motion.div
                                     initial={{ x: 100, y: -100, opacity: 0 }}
                                     whileInView={{ x: 0, y: 0, opacity: 1 }}
-                                    className="absolute top-[15%] right-[10%] md:right-[20%]"
+                                    className="absolute top-[15%] right-[20%]"
                                 >
-                                    <div className="w-36 h-36 md:w-44 md:h-44 rounded-full bg-[#F47C27]/5 border border-[#F47C27] flex flex-col items-center justify-center text-center p-4 scale-110 shadow-[0_0_20px_rgba(244,124,39,0.1)]">
+                                    <div className="w-44 h-44 rounded-full bg-[#F47C27]/5 border border-[#F47C27] flex flex-col items-center justify-center text-center p-4 scale-110 shadow-[0_0_20px_rgba(244,124,39,0.1)]">
                                         <Layers className="w-5 h-5 text-[#F47C27] mb-2" />
                                         <h4 className="font-bold text-sm mb-1">Design System</h4>
                                         <p className="text-[10px] text-[#666666]">일관된 브랜드 경험을 위한 <br />확장 가능한 시스템 구축</p>
@@ -444,9 +553,9 @@ export default function App() {
                                 <motion.div
                                     initial={{ x: -100, y: 100, opacity: 0 }}
                                     whileInView={{ x: 0, y: 0, opacity: 1 }}
-                                    className="absolute bottom-[15%] left-[10%] md:left-[20%]"
+                                    className="absolute bottom-[15%] left-[20%]"
                                 >
-                                    <div className="w-36 h-36 md:w-44 md:h-44 rounded-full bg-[#F47C27]/5 border border-[#F47C27] flex flex-col items-center justify-center text-center p-4 scale-110 shadow-[0_0_20px_rgba(244,124,39,0.1)]">
+                                    <div className="w-44 h-44 rounded-full bg-[#F47C27]/5 border border-[#F47C27] flex flex-col items-center justify-center text-center p-4 scale-110 shadow-[0_0_20px_rgba(244,124,39,0.1)]">
                                         <Briefcase className="w-5 h-5 text-[#F47C27] mb-2" />
                                         <h4 className="font-bold text-sm mb-1">Business Strategy</h4>
                                         <p className="text-[10px] text-[#666666]">기업의 목표와 사용자 니즈를 <br />연결하는 전략적 접근</p>
@@ -457,9 +566,9 @@ export default function App() {
                                 <motion.div
                                     initial={{ x: 100, y: 100, opacity: 0 }}
                                     whileInView={{ x: 0, y: 0, opacity: 1 }}
-                                    className="absolute bottom-[15%] right-[10%] md:right-[20%]"
+                                    className="absolute bottom-[15%] right-[20%]"
                                 >
-                                    <div className="w-36 h-36 md:w-44 md:h-44 rounded-full bg-[#F47C27]/5 border border-[#F47C27] flex flex-col items-center justify-center text-center p-4 scale-110 shadow-[0_0_20px_rgba(244,124,39,0.1)]">
+                                    <div className="w-44 h-44 rounded-full bg-[#F47C27]/5 border border-[#F47C27] flex flex-col items-center justify-center text-center p-4 scale-110 shadow-[0_0_20px_rgba(244,124,39,0.1)]">
                                         <MessageSquare className="w-5 h-5 text-[#F47C27] mb-2" />
                                         <h4 className="font-bold text-sm mb-1">Communication</h4>
                                         <p className="text-[10px] text-[#666666]">유관 부서와의 원활한 협업 및 <br />디자인 논리 전달</p>
@@ -467,47 +576,121 @@ export default function App() {
                                 </motion.div>
                             </div>
                         </div>
+
+                        {/* Mobile: Core Value 배경 + 카드 오버레이 */}
+                        <div className="md:hidden relative py-4">
+                            {/* Core Value - 배경 가운데 레이어 */}
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div className="flex flex-col items-center text-center">
+                                    <motion.div
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+                                        className="absolute w-44 h-44 border border-dashed border-[#F47C27]/25 rounded-full"
+                                    />
+                                    <div className="absolute w-60 h-60 border border-dashed border-[#F47C27]/10 rounded-full" />
+                                    <div className="w-36 h-36 rounded-full bg-[#F47C27]/25 flex flex-col items-center justify-center border border-[#F47C27]/30">
+                                        <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-[#F47C27] mb-1">Core Value</p>
+                                        <h3 className="text-base font-black leading-tight text-[#222222]">Business<br />Driven Design</h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 4개 카드 - 위 레이어 (z-10) / 투명 배경 */}
+                            <div className="relative z-10 grid grid-cols-2 gap-x-4 gap-y-14 p-2">
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.7 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true, margin: '-40px' }}
+                                    transition={{ duration: 0.5, ease: 'easeOut', delay: 0.05 }}
+                                >
+                                    <div className="bg-[#F47C27]/5 rounded-2xl p-4 border border-[#F47C27]/20 flex flex-col items-center text-center min-h-[140px] justify-center shadow-[0_0_15px_rgba(244,124,39,0.08)]">
+                                        <Database className="w-6 h-6 text-[#F47C27] mb-2" />
+                                        <h4 className="font-bold text-xs mb-1">Data Analysis</h4>
+                                        <p className="text-[10px] text-[#666666] leading-relaxed">사용자 지표 기반의<br />객관적 디자인 의사결정</p>
+                                    </div>
+                                </motion.div>
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.7 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true, margin: '-40px' }}
+                                    transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
+                                >
+                                    <div className="bg-[#F47C27]/5 rounded-2xl p-4 border border-[#F47C27]/20 flex flex-col items-center text-center min-h-[140px] justify-center shadow-[0_0_15px_rgba(244,124,39,0.08)]">
+                                        <Layers className="w-6 h-6 text-[#F47C27] mb-2" />
+                                        <h4 className="font-bold text-xs mb-1">Design System</h4>
+                                        <p className="text-[10px] text-[#666666] leading-relaxed">일관된 브랜드 경험을 위한<br />확장 가능한 시스템 구축</p>
+                                    </div>
+                                </motion.div>
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.7 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true, margin: '-40px' }}
+                                    transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
+                                >
+                                    <div className="bg-[#F47C27]/5 rounded-2xl p-4 border border-[#F47C27]/20 flex flex-col items-center text-center min-h-[140px] justify-center shadow-[0_0_15px_rgba(244,124,39,0.08)]">
+                                        <Briefcase className="w-6 h-6 text-[#F47C27] mb-2" />
+                                        <h4 className="font-bold text-xs mb-1">Business Strategy</h4>
+                                        <p className="text-[10px] text-[#666666] leading-relaxed">기업의 목표와 사용자 니즈를<br />연결하는 전략적 접근</p>
+                                    </div>
+                                </motion.div>
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.7 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true, margin: '-40px' }}
+                                    transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
+                                >
+                                    <div className="bg-[#F47C27]/5 rounded-2xl p-4 border border-[#F47C27]/20 flex flex-col items-center text-center min-h-[140px] justify-center shadow-[0_0_15px_rgba(244,124,39,0.08)]">
+                                        <MessageSquare className="w-6 h-6 text-[#F47C27] mb-2" />
+                                        <h4 className="font-bold text-xs mb-1">Communication</h4>
+                                        <p className="text-[10px] text-[#666666] leading-relaxed">유관 부서와의 원활한 협업 및<br />디자인 논리 전달</p>
+                                    </div>
+                                </motion.div>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
-                <section id="work" className="px-6 py-24 bg-white">
+                <section id="work" className="px-4 md:px-6 py-16 md:py-24 bg-white">
                     <div className="max-w-[1200px] mx-auto">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+                        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-16 gap-4 md:gap-8">
                             <FadeUp>
-                                <h2 className="text-4xl font-bold tracking-tight mb-4">Selected Projects</h2>
-                                <p className="text-[#666666]">에이전시 및 대기업 운영 프로젝트 중심의 포트폴리오입니다.</p>
+                                <h2 className="text-2xl md:text-4xl font-bold tracking-tight mb-2 md:mb-4">Selected Projects</h2>
+                                <p className="text-sm md:text-base text-[#666666]">에이전시 및 대기업 운영 프로젝트 중심의 포트폴리오입니다.</p>
                             </FadeUp>
 
-                            <div className="flex flex-wrap gap-2">
-                                {categories.map(cat => (
-                                    <button
-                                        key={cat}
-                                        onClick={() => setActiveTab(cat)}
-                                        className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${activeTab === cat
-                                            ? 'bg-[#F47C27] text-white'
-                                            : 'bg-[#EEEEEE] text-[#666666] hover:bg-[#F47C27]/5'
-                                            }`}
-                                    >
-                                        {cat}
-                                    </button>
-                                ))}
-                            </div>
+                            <FadeUp delay={0.05}>
+                                <div className="flex flex-wrap gap-2">
+                                    {categories.map(cat => (
+                                        <button
+                                            key={cat}
+                                            onClick={() => setActiveTab(cat)}
+                                            className={`px-4 md:px-6 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-all ${activeTab === cat
+                                                ? 'bg-[#F47C27] text-white'
+                                                : 'bg-[#EEEEEE] text-[#666666] hover:bg-[#F47C27]/5'
+                                                }`}
+                                        >
+                                            {cat}
+                                        </button>
+                                    ))}
+                                </div>
+                            </FadeUp>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                             <AnimatePresence mode="popLayout">
                                 {filteredProjects.map((project, index) => (
                                     <motion.div
                                         layout
                                         key={project.id}
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
+                                        initial={{ opacity: 0, y: 40 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true, margin: '-40px' }}
                                         exit={{ opacity: 0, scale: 0.9 }}
-                                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                                        transition={{ duration: 0.5, delay: index * 0.08 }}
                                         onClick={() => setSelectedProject(project)}
                                         className="group cursor-pointer"
                                     >
-                                        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-[#EEEEEE]">
+                                        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl md:rounded-3xl bg-[#EEEEEE]">
                                             <img
                                                 src={project.image}
                                                 alt={project.title}
@@ -515,20 +698,20 @@ export default function App() {
                                                 referrerPolicy="no-referrer"
                                             />
                                             {/* Full Overlay with Dimm Effect - Constant visibility */}
-                                            <div className="absolute inset-0 bg-black/60 transition-all duration-500 flex flex-col justify-end p-8 text-white group-hover:bg-black/60">
+                                            <div className="absolute inset-0 bg-black/60 transition-all duration-500 flex flex-col justify-end p-4 md:p-8 text-white group-hover:bg-black/60">
                                                 <div className="transform transition-all duration-500">
-                                                    <h3 className="text-2xl font-bold mb-3">{project.title}</h3>
-                                                    <p className="text-white/90 text-sm leading-relaxed line-clamp-2 mb-6">{project.description}</p>
-                                                    <div className="inline-flex items-center gap-2 bg-[#F47C27] text-white px-5 py-2 rounded-xl text-sm font-bold hover:bg-white hover:text-[#F47C27] transition-all">
-                                                        View Details <ChevronRight className="w-4 h-4" />
+                                                    <h3 className="text-lg md:text-2xl font-bold mb-1 md:mb-3">{project.title}</h3>
+                                                    <p className="text-white/90 text-xs md:text-sm leading-relaxed line-clamp-2 mb-3 md:mb-6">{project.description}</p>
+                                                    <div className="inline-flex items-center gap-2 bg-[#F47C27] text-white px-4 md:px-5 py-1.5 md:py-2 rounded-xl text-xs md:text-sm font-bold hover:bg-white hover:text-[#F47C27] transition-all">
+                                                        View Details <ChevronRight className="w-3 h-3 md:w-4 md:h-4" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="absolute top-6 left-6 flex items-center gap-2">
-                                                <span className="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider text-[#F47C27] shadow-sm">
+                                            <div className="absolute top-3 left-3 md:top-6 md:left-6 flex items-center gap-1.5 md:gap-2">
+                                                <span className="bg-white/90 backdrop-blur-md px-2.5 md:px-4 py-1 md:py-1.5 rounded-lg md:rounded-xl text-[8px] md:text-[10px] font-bold uppercase tracking-wider text-[#F47C27] shadow-sm">
                                                     {project.category}
                                                 </span>
-                                                <span className="border border-white px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider text-white">
+                                                <span className="border border-white px-2.5 md:px-4 py-1 md:py-1.5 rounded-lg md:rounded-xl text-[8px] md:text-[10px] font-bold uppercase tracking-wider text-white">
                                                     {project.tag}
                                                 </span>
                                             </div>
@@ -541,32 +724,34 @@ export default function App() {
                 </section>
 
                 {/* About Section */}
-                <section id="about" className="px-6 py-24 max-w-[1200px] mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-                        <div className="relative">
-                            <div className="aspect-square rounded-3xl overflow-hidden">
-                                <img
-                                    src="/images/프로필사진.jpeg"
-                                    alt="Kim Ah Hyun"
-                                    className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
-                                    referrerPolicy="no-referrer"
-                                />
-                            </div>
-                            <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-2xl shadow-xl border border-black/5 hidden lg:block">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-[#F47C27] rounded-full flex items-center justify-center text-white">
-                                        <Award className="w-6 h-6" />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs font-bold text-[#666666] uppercase tracking-widest">Experience</p>
-                                        <p className="text-lg font-bold">10+</p>
+                <section id="about" className="px-4 md:px-6 py-16 md:py-24 max-w-[1200px] mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
+                        <FadeUp>
+                            <div className="relative">
+                                <div className="aspect-square rounded-3xl overflow-hidden">
+                                    <img
+                                        src="/images/프로필사진.jpeg"
+                                        alt="Kim Ah Hyun"
+                                        className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                                        referrerPolicy="no-referrer"
+                                    />
+                                </div>
+                                <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-2xl shadow-xl border border-black/5 hidden lg:block">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-12 h-12 bg-[#F47C27] rounded-full flex items-center justify-center text-white">
+                                            <Award className="w-6 h-6" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-bold text-[#666666] uppercase tracking-widest">Experience</p>
+                                            <p className="text-lg font-bold">10+</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </FadeUp>
                         <FadeUp delay={0.15}>
-                            <h2 className="text-4xl font-bold mb-8">안녕하세요, <br />디자이너 김아현입니다.</h2>
-                            <div className="space-y-6 text-[#666666] leading-relaxed">
+                            <h2 className="text-2xl md:text-4xl font-bold mb-4 md:mb-8">안녕하세요, <br />디자이너 김아현입니다.</h2>
+                            <div className="space-y-4 md:space-y-6 text-sm md:text-base text-[#666666] leading-relaxed">
                                 <p>
                                     저는 복잡한 비즈니스 요구사항을 명확하고 직관적인 시각 언어로 풀어내는 것에 열정을 가지고 있습니다.
                                     금융권 앱 운영부터 글로벌 대기업의 웹 서비스 디자인까지, 다양한 규모와 성격의 프로젝트를 수행하며
@@ -578,7 +763,7 @@ export default function App() {
                                     든든한 파트너가 되고자 합니다.
                                 </p>
                             </div>
-                            <div className="mt-10 grid grid-cols-2 gap-6">
+                            <div className="mt-6 md:mt-10 grid grid-cols-2 gap-4 md:gap-6">
                                 <div>
                                     <h4 className="font-bold mb-2">Skills</h4>
                                     <ul className="text-sm space-y-1">
@@ -605,28 +790,28 @@ export default function App() {
                 </section>
 
                 {/* Contact Section */}
-                <section id="contact" className="px-6 py-24 bg-[#333333] text-white">
+                <section id="contact" className="px-4 md:px-6 py-16 md:py-24 bg-[#333333] text-white">
                     <div className="max-w-[1200px] mx-auto text-center">
                         <FadeUp>
-                            <h2 className="text-4xl md:text-5xl font-bold mb-8">함께 성장할 준비가 되셨나요?</h2>
+                            <h2 className="text-2xl md:text-5xl font-bold mb-4 md:mb-8">함께 성장할 준비가 되셨나요?</h2>
                         </FadeUp>
                         <FadeUp delay={0.1}>
-                            <p className="text-white/60 text-lg mb-12 max-w-2xl mx-auto">
+                            <p className="text-white/60 text-sm md:text-lg mb-8 md:mb-12 max-w-2xl mx-auto">
                                 새로운 프로젝트 제안이나 협업 문의는 언제든 환영합니다. <br />
                                 아래 연락처를 통해 편하게 연락주세요.
                             </p>
                         </FadeUp>
-                        <div className="flex flex-col md:flex-row items-center justify-center gap-8">
-                            <a href="mailto:nubrixstudio@gmail.com" className="group flex items-center gap-4 bg-white/5 hover:bg-[#F47C27] px-8 py-4 rounded-2xl transition-all border border-white/10">
-                                <Mail className="w-6 h-6 text-[#F47C27] group-hover:text-white" />
-                                <span className="text-lg font-medium">nubrixstudio@gmail.com</span>
+                        <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
+                            <a href="mailto:nubrixstudio@gmail.com" className="group flex items-center gap-3 md:gap-4 bg-white/5 hover:bg-[#F47C27] px-5 md:px-8 py-3 md:py-4 rounded-2xl transition-all border border-white/10 w-full md:w-auto justify-center">
+                                <Mail className="w-5 h-5 md:w-6 md:h-6 text-[#F47C27] group-hover:text-white" />
+                                <span className="text-sm md:text-lg font-medium">nubrixstudio@gmail.com</span>
                             </a>
                         </div>
                     </div>
                 </section>
             </main>
 
-            <footer className="px-6 py-12 border-t border-black/5 text-center text-sm text-[#666666]">
+            <footer className="px-4 md:px-6 py-8 md:py-12 border-t border-black/5 text-center text-xs md:text-sm text-[#666666]">
                 <p>©2026 Kim Ah Hyun. All rights reserved.</p>
             </footer>
 
@@ -637,7 +822,7 @@ export default function App() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex items-center justify-center px-6 py-12"
+                        className="fixed inset-0 z-[100] flex items-end md:items-center justify-center px-0 md:px-6 py-0 md:py-12"
                     >
                         <div
                             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -647,18 +832,18 @@ export default function App() {
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="relative w-full max-w-5xl bg-white rounded-3xl overflow-hidden shadow-2xl max-h-full overflow-y-auto"
+                            className="relative w-full max-w-5xl bg-white rounded-t-3xl md:rounded-3xl overflow-hidden shadow-2xl max-h-[90vh] md:max-h-full overflow-y-auto"
                         >
                             <button
                                 onClick={() => setSelectedProject(null)}
-                                className="absolute top-6 right-6 z-10 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg hover:bg-[#F47C27] hover:text-white transition-all"
+                                className="absolute top-3 right-3 md:top-6 md:right-6 z-10 w-8 h-8 md:w-10 md:h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg hover:bg-[#F47C27] hover:text-white transition-all"
                             >
-                                <X className="w-5 h-5" />
+                                <X className="w-4 h-4 md:w-5 md:h-5" />
                             </button>
 
                             <div className="flex flex-col">
                                 {/* Image Section: Top Overlay area */}
-                                <div className="bg-[#EEEEEE] p-6 lg:p-12 flex justify-center">
+                                <div className="bg-[#EEEEEE] p-4 md:p-6 lg:p-12 flex justify-center">
                                     <img
                                         src={selectedProject.image}
                                         alt={selectedProject.title}
@@ -668,21 +853,21 @@ export default function App() {
                                 </div>
 
                                 {/* Content Section: Below Image */}
-                                <div className="p-8 lg:p-16 max-w-4xl mx-auto w-full">
-                                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 pb-8 border-b border-black/5">
+                                <div className="p-5 md:p-8 lg:p-16 max-w-4xl mx-auto w-full">
+                                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-8 mb-6 md:mb-12 pb-4 md:pb-8 border-b border-black/5">
                                         <div>
                                             <span className="inline-block bg-[#F47C27]/10 text-[#F47C27] px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider mb-4">
                                                 {selectedProject.category}
                                             </span>
-                                            <h2 className="text-4xl font-bold">{selectedProject.title}</h2>
+                                            <h2 className="text-2xl md:text-4xl font-bold">{selectedProject.title}</h2>
                                         </div>
 
-                                        <div className="flex gap-4">
-                                            <div className="bg-[#F47C27]/5 px-6 py-3 rounded-2xl border border-[#F47C27]/10">
+                                        <div className="flex gap-3 md:gap-4">
+                                            <div className="bg-[#F47C27]/5 px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl border border-[#F47C27]/10">
                                                 <p className="text-[10px] font-bold text-[#666666] uppercase tracking-widest mb-1">Role</p>
                                                 <p className="font-bold text-[#333333]">{selectedProject.role}</p>
                                             </div>
-                                            <div className="bg-[#F47C27]/5 px-6 py-3 rounded-2xl border border-[#F47C27]/10">
+                                            <div className="bg-[#F47C27]/5 px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl border border-[#F47C27]/10">
                                                 <p className="text-[10px] font-bold text-[#666666] uppercase tracking-widest mb-1">Contribution</p>
                                                 <p className="font-bold text-[#333333]">{selectedProject.contribution}</p>
                                             </div>
@@ -690,7 +875,7 @@ export default function App() {
                                     </div>
 
                                     <div className="space-y-12">
-                                        <p className="text-xl text-[#666666] leading-relaxed">
+                                        <p className="text-base md:text-xl text-[#666666] leading-relaxed">
                                             {selectedProject.description}
                                         </p>
 
