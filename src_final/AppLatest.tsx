@@ -297,8 +297,8 @@ export default function App() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center relative z-10">
                         <motion.div
-                            initial={{ opacity: 0, x: -30 }}
-                            animate={{ opacity: 1, x: 0 }}
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
                         >
                             <h2 className="text-[#F47C27] font-mono text-xs md:text-sm tracking-widest uppercase mb-3 md:mb-4">Web & UI/UX Designer</h2>
@@ -487,12 +487,12 @@ export default function App() {
                 {/* Infographic Section */}
                 <section className="px-4 md:px-6 py-12 md:py-20 bg-[#F47C27]/5 border-y border-[#F47C27]/10 overflow-hidden">
                     <div className="max-w-[1200px] mx-auto">
-                        <FadeUp className="text-center mb-6 md:mb-8">
+                        <FadeUp className="text-left md:text-center mb-6 md:mb-8">
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F47C27]/10 text-[#F47C27] text-[10px] font-bold uppercase tracking-widest mb-4 md:mb-6">
                                 Industry Awareness
                             </div>
                             <h2 className="text-2xl md:text-5xl font-bold mb-4 md:mb-6">시장을 읽는 디자이너</h2>
-                            <p className="text-sm md:text-base text-[#666666] leading-relaxed max-w-2xl mx-auto">
+                            <p className="text-sm md:text-base text-[#666666] leading-relaxed max-w-2xl md:mx-auto">
                                 단순히 시각적인 아름다움을 넘어, 비즈니스 가치를 창출하고
                                 사용자와 기업 모두를 만족시키는 디자인 전략을 제안합니다.
                             </p>
@@ -579,29 +579,13 @@ export default function App() {
 
                         {/* Mobile: Core Value 배경 + 카드 오버레이 */}
                         <div className="md:hidden relative py-4">
-                            {/* Core Value - 배경 가운데 레이어 */}
-                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div className="flex flex-col items-center text-center">
-                                    <motion.div
-                                        animate={{ rotate: 360 }}
-                                        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-                                        className="absolute w-44 h-44 border border-dashed border-[#F47C27]/25 rounded-full"
-                                    />
-                                    <div className="absolute w-60 h-60 border border-dashed border-[#F47C27]/10 rounded-full" />
-                                    <div className="w-36 h-36 rounded-full bg-[#F47C27]/25 flex flex-col items-center justify-center border border-[#F47C27]/30">
-                                        <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-[#F47C27] mb-1">Core Value</p>
-                                        <h3 className="text-base font-black leading-tight text-[#222222]">Business<br />Driven Design</h3>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* 4개 카드 - 위 레이어 (z-10) / 투명 배경 */}
-                            <div className="relative z-10 grid grid-cols-2 gap-x-4 gap-y-14 p-2">
+                            {/* 상단 2개 카드 */}
+                            <div className="relative z-10 grid grid-cols-2 gap-x-4 p-2">
                                 <motion.div
-                                    initial={{ opacity: 0, scale: 0.7 }}
-                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    initial={{ opacity: 0, x: -30, y: -20 }}
+                                    whileInView={{ opacity: 1, x: 0, y: 0 }}
                                     viewport={{ once: true, margin: '-40px' }}
-                                    transition={{ duration: 0.5, ease: 'easeOut', delay: 0.05 }}
+                                    transition={{ duration: 0.6, ease: 'easeOut', delay: 0.3 }}
                                 >
                                     <div className="bg-[#F47C27]/5 rounded-2xl p-4 border border-[#F47C27]/20 flex flex-col items-center text-center min-h-[140px] justify-center shadow-[0_0_15px_rgba(244,124,39,0.08)]">
                                         <Database className="w-6 h-6 text-[#F47C27] mb-2" />
@@ -610,10 +594,10 @@ export default function App() {
                                     </div>
                                 </motion.div>
                                 <motion.div
-                                    initial={{ opacity: 0, scale: 0.7 }}
-                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    initial={{ opacity: 0, x: 30, y: -20 }}
+                                    whileInView={{ opacity: 1, x: 0, y: 0 }}
                                     viewport={{ once: true, margin: '-40px' }}
-                                    transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
+                                    transition={{ duration: 0.6, ease: 'easeOut', delay: 0.4 }}
                                 >
                                     <div className="bg-[#F47C27]/5 rounded-2xl p-4 border border-[#F47C27]/20 flex flex-col items-center text-center min-h-[140px] justify-center shadow-[0_0_15px_rgba(244,124,39,0.08)]">
                                         <Layers className="w-6 h-6 text-[#F47C27] mb-2" />
@@ -621,11 +605,74 @@ export default function App() {
                                         <p className="text-[10px] text-[#666666] leading-relaxed">일관된 브랜드 경험을 위한<br />확장 가능한 시스템 구축</p>
                                     </div>
                                 </motion.div>
+                            </div>
+
+                            {/* 중앙 Core Value 영역 - 점선 원이 중심에서 사방으로 퍼짐 */}
+                            <div className="relative flex items-center justify-center my-2" style={{ height: '140px' }}>
+                                {/* 가장 안쪽 점선 원 - 회전 */}
                                 <motion.div
-                                    initial={{ opacity: 0, scale: 0.7 }}
-                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    initial={{ scale: 0.3, opacity: 0 }}
+                                    whileInView={{ scale: 1, opacity: 1 }}
                                     viewport={{ once: true, margin: '-40px' }}
-                                    transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
+                                    transition={{ duration: 1, ease: 'easeOut', delay: 0.1 }}
+                                    className="absolute"
+                                >
+                                    <motion.div
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+                                        className="w-44 h-44 border border-dashed border-[#F47C27]/30 rounded-full"
+                                    />
+                                </motion.div>
+                                {/* 중간 점선 원 - 천천히 확장 */}
+                                <motion.div
+                                    initial={{ scale: 0.2, opacity: 0 }}
+                                    whileInView={{ scale: 1, opacity: 1 }}
+                                    viewport={{ once: true, margin: '-40px' }}
+                                    transition={{ duration: 1.2, ease: 'easeOut', delay: 0.3 }}
+                                    className="absolute w-72 h-72 border border-dashed border-[#F47C27]/15 rounded-full"
+                                />
+                                {/* 바깥쪽 점선 원 - 가장 넓게 확장 */}
+                                <motion.div
+                                    initial={{ scale: 0.15, opacity: 0 }}
+                                    whileInView={{ scale: 1, opacity: 1 }}
+                                    viewport={{ once: true, margin: '-40px' }}
+                                    transition={{ duration: 1.4, ease: 'easeOut', delay: 0.5 }}
+                                    className="absolute w-[380px] h-[380px] border border-dashed border-[#F47C27]/8 rounded-full"
+                                />
+                                {/* 가장 바깥 점선 원 - pulse 효과 */}
+                                <motion.div
+                                    initial={{ scale: 0.1, opacity: 0 }}
+                                    whileInView={{ scale: 1, opacity: 0.6 }}
+                                    viewport={{ once: true, margin: '-40px' }}
+                                    transition={{ duration: 1.6, ease: 'easeOut', delay: 0.7 }}
+                                    className="absolute"
+                                >
+                                    <motion.div
+                                        animate={{ scale: [1, 1.05, 1], opacity: [0.6, 0.3, 0.6] }}
+                                        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                                        className="w-[460px] h-[460px] border border-dashed border-[#F47C27]/5 rounded-full"
+                                    />
+                                </motion.div>
+                                {/* Core Value 중심 원 */}
+                                <motion.div
+                                    initial={{ scale: 0, opacity: 0 }}
+                                    whileInView={{ scale: 1, opacity: 1 }}
+                                    viewport={{ once: true, margin: '-40px' }}
+                                    transition={{ duration: 0.8, ease: 'easeOut', type: 'spring', stiffness: 100 }}
+                                    className="w-36 h-36 rounded-full bg-[#F47C27]/25 flex flex-col items-center justify-center border border-[#F47C27]/30 z-[1] text-center"
+                                >
+                                    <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-[#F47C27] mb-1">Core Value</p>
+                                    <h3 className="text-base font-black leading-tight text-[#222222] text-center">Business<br />Driven Design</h3>
+                                </motion.div>
+                            </div>
+
+                            {/* 하단 2개 카드 */}
+                            <div className="relative z-10 grid grid-cols-2 gap-x-4 p-2">
+                                <motion.div
+                                    initial={{ opacity: 0, x: -30, y: 20 }}
+                                    whileInView={{ opacity: 1, x: 0, y: 0 }}
+                                    viewport={{ once: true, margin: '-40px' }}
+                                    transition={{ duration: 0.6, ease: 'easeOut', delay: 0.5 }}
                                 >
                                     <div className="bg-[#F47C27]/5 rounded-2xl p-4 border border-[#F47C27]/20 flex flex-col items-center text-center min-h-[140px] justify-center shadow-[0_0_15px_rgba(244,124,39,0.08)]">
                                         <Briefcase className="w-6 h-6 text-[#F47C27] mb-2" />
@@ -634,10 +681,10 @@ export default function App() {
                                     </div>
                                 </motion.div>
                                 <motion.div
-                                    initial={{ opacity: 0, scale: 0.7 }}
-                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    initial={{ opacity: 0, x: 30, y: 20 }}
+                                    whileInView={{ opacity: 1, x: 0, y: 0 }}
                                     viewport={{ once: true, margin: '-40px' }}
-                                    transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
+                                    transition={{ duration: 0.6, ease: 'easeOut', delay: 0.6 }}
                                 >
                                     <div className="bg-[#F47C27]/5 rounded-2xl p-4 border border-[#F47C27]/20 flex flex-col items-center text-center min-h-[140px] justify-center shadow-[0_0_15px_rgba(244,124,39,0.08)]">
                                         <MessageSquare className="w-6 h-6 text-[#F47C27] mb-2" />
@@ -682,15 +729,19 @@ export default function App() {
                                     <motion.div
                                         layout
                                         key={project.id}
-                                        initial={{ opacity: 0, y: 40 }}
+                                        initial={{ opacity: 0, y: 50 }}
                                         whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true, margin: '-40px' }}
-                                        exit={{ opacity: 0, scale: 0.9 }}
-                                        transition={{ duration: 0.5, delay: index * 0.08 }}
+                                        viewport={{ once: true, margin: '-20px' }}
+                                        exit={{ opacity: 0, scale: 0.95 }}
+                                        transition={{
+                                            duration: 0.9,
+                                            ease: [0.22, 1, 0.36, 1], // expo out smoother
+                                            delay: index * 0.1
+                                        }}
                                         onClick={() => setSelectedProject(project)}
                                         className="group cursor-pointer"
                                     >
-                                        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl md:rounded-3xl bg-[#EEEEEE]">
+                                        <div className="relative h-[180px] md:h-auto md:aspect-[4/3] overflow-hidden rounded-2xl md:rounded-3xl bg-[#EEEEEE]">
                                             <img
                                                 src={project.image}
                                                 alt={project.title}
@@ -732,7 +783,7 @@ export default function App() {
                             <div className="relative">
                                 <div className="aspect-square rounded-3xl overflow-hidden">
                                     <img
-                                        src="/images/프로필사진.jpeg"
+                                        src="/images/프로필사진.png"
                                         alt="Kim Ah Hyun"
                                         className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
                                         referrerPolicy="no-referrer"
