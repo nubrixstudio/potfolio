@@ -907,8 +907,8 @@ export default function App() {
                                 </div>
 
                                 {/* Content Section: Below Image */}
-                                <div className="p-5 md:p-8 lg:p-16 max-w-4xl mx-auto w-full">
-                                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-8 mb-6 md:mb-12 pb-4 md:pb-8 border-b border-black/5">
+                                <div className="px-5 pt-10 pb-8 md:px-8 md:pt-16 md:pb-12 lg:px-16 lg:pt-20 lg:pb-16 max-w-4xl mx-auto w-full">
+                                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-8 mb-8">
                                         <div>
                                             <span className="inline-block bg-[#F47C27]/10 text-[#F47C27] px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider mb-4">
                                                 {selectedProject.category}
