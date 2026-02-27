@@ -20,6 +20,7 @@ import {
     MessageSquare,
     User
 } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 
 // Types
 interface Project {
@@ -850,7 +851,7 @@ export default function App() {
                         </FadeUp>
                         <FadeUp delay={0.1}>
                             <p className="text-white/60 text-sm md:text-lg mb-8 md:mb-12 max-w-2xl mx-auto">
-                                새로운 프로젝트 제안이나 협업 문의는 언제든 환영합니다. <br />
+                                새로운 프로젝트 제안이나 협업 ���의는 언제든 환영합니다. <br />
                                 아래 연락처를 통해 편하게 연락주세요.
                             </p>
                         </FadeUp>
@@ -973,6 +974,7 @@ export default function App() {
                     </motion.div>
                 )}
             </AnimatePresence>
+            <Analytics />
         </div>
     );
 }
