@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, type ReactNode } from 'react';
+import { Analytics } from "@vercel/analytics/react"
 import { motion, AnimatePresence } from 'motion/react';
 import {
     ExternalLink,
@@ -896,11 +897,11 @@ export default function App() {
 
                             <div className="flex flex-col">
                                 {/* Image Section: Top Overlay area */}
-                                <div className="bg-[#EEEEEE] p-4 md:p-6 lg:p-12 flex justify-center">
+                                <div className="bg-white p-4 md:p-6 lg:p-12 flex justify-center border-b border-[#EEEEEE]">
                                     <img
                                         src={selectedProject.image}
                                         alt={selectedProject.title}
-                                        className="w-full max-w-4xl h-auto rounded-2xl shadow-2xl"
+                                        className="w-full max-w-4xl h-auto rounded-2xl"
                                         referrerPolicy="no-referrer"
                                     />
                                 </div>
@@ -973,6 +974,7 @@ export default function App() {
                     </motion.div>
                 )}
             </AnimatePresence>
+            <Analytics />
         </div>
     );
 }
